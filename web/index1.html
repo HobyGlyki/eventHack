@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Яндекс Карта с меткой</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apiKey=1be0d44d-04b8-42e6-9a32-d7690ba23fab" type="text/javascript"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 600px;"></div>
+    <script>
+        ymaps.ready(init);
+
+        function init() {
+            var myMap = new ymaps.Map('map', {
+                center: [55.76, 37.64], // Координаты Москвы как начальные
+                zoom: 15
+            });
+
+            // Создаем геокодер
+            var geocoder = ymaps.geocode('Белоусово, Калужская 9');
+
+            geocoder.then(function (res) {
+                var firstGeoObject = res.geoObjects.get(0);
+
+                // Получаем координаты адреса
+                var coords = firstGeoObject.geometry.getCoordinates();
+
+                // Создаем метку
+                var myPlacemark = new ymaps.Placemark(coords, {
+                    hintContent: 'Белоусово, Калужская 9'
+                });
+
+                // Добавляем метку на карту
+                myMap.geoObjects.add(myPlacemark);
+
+                // Центрируем карту на найденном адресе
+                myMap.setCenter(coords);
+            }, function (err) {
+                alert('Ошибка при геокодировании: ' + err.message);
+            });
+        }
+    </script>
+</body>
+</html>

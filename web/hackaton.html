@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список мероприятий</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apiKey=1be0d44d-04b8-42e6-9a32-d7690ba23fab " type="text/javascript"></script>
+    <style>
+        /* Стили для разделения мероприятий */
+        .event-item {
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .event-item:not(:last-child) {
+            margin-bottom: 30px;
+        }
+        
+        .event-item h2 {
+            margin-top: 0;
+        }
+        
+        .event-item p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <input type="date" id="dateFilter" />
+        <select id="themeFilter">
+            <option value="">Без фильтра</option>
+            <option value="Искусство и творчество">Искусство и творчество</option>
+            <option value="Образование и развитие">Образование и развитие</option>
+            <option value="Спорт и физическая активность">Спорт и физическая активность</option>
+            <option value="Образовательные события и церемонии">Образовательные события и церемонии</option>
+            <option value="Предпринимательство и бизнес">Предпринимательство и бизнес</option>
+        </select>
+        <button id="filter">Фильтровать</button>
+        <button id="resetFilter">Сбросить фильтр</button>
+    </div>
+    <div id="events-list"></div>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+
+    <script>
+        // Функция для загрузки данных из файла events.json
+        async function loadEvents() {
+    const url = 'https://raw.githubusercontent.com/HobyGlyki/eventHack/main/JSON/events.json';
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        return [];
+    }
+}
+
+        // Функция для отображения списка мероприятий
+        function displayEvents(events) {
+            const eventsList = document.getElementById('events-list');
+            eventsList.innerHTML = '';
+
+            events.forEach(event => {
+                const eventItem = document.createElement('div');
+                eventItem.classList.add('event-item'); // Добавляем класс для стилизации
+                eventItem.innerHTML = `
+                    <h2>${event.title}</h2>
+                    <p>Описание: ${event.description}</p>
+                    <p>Дата: ${event.date}</p>
+                    <p>Место: ${event.location}</p>
+                    <p>Тематика: ${event.theme}</p>
+                `;
+                eventsList.appendChild(eventItem);
+            });
+        }
+
+        // Функция для отображения карты с маркерами мероприятий
+        let myMap;
+
+
+        async function displayMap(events) {
+    ymaps.ready(init);
+    
+    async function init() {
+        if (!myMap) {
+            myMap = new ymaps.Map('map', {
+                center: [54.507935, 36.234736],
+                zoom: 12
+            });
+        } else {
+            myMap.geoObjects.removeAll();
+        }
+
+        await Promise.all(events.map(async event => {
+            try {
+                const result = await ymaps.geocode(event.location);
+                const coords = result.geoObjects.get(0).geometry.getCoordinates();
+                const myPlacemark = new ymaps.Placemark(coords, {
+                    hintContent: event.title
+                });
+                myMap.geoObjects.add(myPlacemark);
+            } catch (error) {
+                console.error('Ошибка геокодирования:', error);
+            }
+        }));
+    }
+}
+
+ // Функция фильтрации мероприятий по дате
+ function filterEventsByDate(events, date) {
+ return events.filter(event => event.date.includes(date));
+ }
+
+ // Функция фильтрации мероприятий по тематике
+ function filterEventsByTheme(events, theme) {
+ return theme ? events.filter(event => event.theme === theme) : events;
+ }
+
+ // Основная функция
+ async function main() {
+ const events = await loadEvents();
+ displayEvents(events);
+ displayMap(events);
+
+ // Фильтрация по дате и тематике
+ document.getElementById('filter').addEventListener('click', () => {
+ const dateInput = document.getElementById('dateFilter').value;
+ const themeInput = document.getElementById('themeFilter').value;
+ let filteredEvents = events;
+
+ if (dateInput) {
+ filteredEvents = filterEventsByDate(filteredEvents, dateInput);
+ }
+ if (themeInput) {
+ filteredEvents = filterEventsByTheme(filteredEvents, themeInput);
+ }
+
+ displayEvents(filteredEvents);
+ displayMap(filteredEvents);
+ });
+
+ // Сброс фильтра
+ document.getElementById('resetFilter').addEventListener('click', () => {
+ displayEvents(events);
+ displayMap(events);
+ });
+ }
+
+ main();
+ </script>
+</body>
+</html>
