@@ -48,10 +48,16 @@
     <script>
         // Функция для загрузки данных из файла events.json
         async function loadEvents() {
-            const response = await fetch('events.json');
-            const data = await response.json();
-            return data;
-        }
+    const url = 'https://raw.githubusercontent.com/HobyGlyki/eventHack/main/JSON/events.json';
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Ошибка загрузки данных:', error);
+        return [];
+    }
+}
 
         // Функция для отображения списка мероприятий
         function displayEvents(events) {
@@ -76,35 +82,33 @@
         let myMap;
 
 
- function displayMap(events) {
- ymaps.ready(init);
+        async function displayMap(events) {
+    ymaps.ready(init);
+    
+    async function init() {
+        if (!myMap) {
+            myMap = new ymaps.Map('map', {
+                center: [54.507935, 36.234736],
+                zoom: 12
+            });
+        } else {
+            myMap.geoObjects.removeAll();
+        }
 
- function init() {
- if (!myMap) {
- myMap = new ymaps.Map('map', {
- center: [54.507935, 36.234736], // Координаты центра Калуги
- zoom: 12
- });
- } else {
- myMap.geoObjects.removeAll();
- }
-
- events.forEach(async event => {
- try {
- const geocoder = ymaps.geocode(event.location);
- const result = await geocoder;
- const coords = result.geoObjects.get(0).geometry.getCoordinates();
-
- const myPlacemark = new ymaps.Placemark(coords, {
- hintContent: event.title
- });
- myMap.geoObjects.add(myPlacemark);
- } catch (error) {
- console.error('Ошибка геокодирования:', error);
- }
- });
- }
- }
+        await Promise.all(events.map(async event => {
+            try {
+                const result = await ymaps.geocode(event.location);
+                const coords = result.geoObjects.get(0).geometry.getCoordinates();
+                const myPlacemark = new ymaps.Placemark(coords, {
+                    hintContent: event.title
+                });
+                myMap.geoObjects.add(myPlacemark);
+            } catch (error) {
+                console.error('Ошибка геокодирования:', error);
+            }
+        }));
+    }
+}
 
  // Функция фильтрации мероприятий по дате
  function filterEventsByDate(events, date) {
