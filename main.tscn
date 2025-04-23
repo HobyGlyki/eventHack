@@ -1,0 +1,77 @@
+[gd_scene load_steps=7 format=3 uid="uid://f3tjhtxu2nkg"]
+
+[ext_resource type="Script" uid="uid://7guj1172434l" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://6jwyox3eyk6u" path="res://testtitle.jpg" id="2_0xm2m"]
+[ext_resource type="Texture2D" uid="uid://4gbi4wiajwyn" path="res://test123.jpg" id="2_1bvp3"]
+[ext_resource type="Script" uid="uid://b8d5cymhbpojh" path="res://start.gd" id="2_lquwl"]
+[ext_resource type="PackedScene" uid="uid://b3j0yc44qwioe" path="res://event.tscn" id="3_h2yge"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_1bvp3"]
+
+[node name="Node2D" type="Node2D"]
+script = ExtResource("1_0xm2m")
+
+[node name="start" type="Node2D" parent="."]
+script = ExtResource("2_lquwl")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
+
+[node name="Test123" type="Sprite2D" parent="."]
+z_index = -160
+position = Vector2(544, 1200)
+scale = Vector2(1.44308, 1.87375)
+texture = ExtResource("2_1bvp3")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+process_mode = 1
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="CanvasLayer"]
+clip_children = 1
+light_mask = 7
+visibility_layer = 786439
+anchors_preset = -1
+anchor_left = -0.138889
+anchor_right = -0.138889
+offset_left = 350.0
+offset_top = 232.0
+offset_right = 745.0
+offset_bottom = 742.0
+scale = Vector2(1.76, 1.76)
+
+[node name="SubViewport" type="SubViewport" parent="CanvasLayer/SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(394, 510)
+render_target_update_mode = 4
+
+[node name="Sprite2D" type="Sprite2D" parent="CanvasLayer/SubViewportContainer"]
+position = Vector2(197.727, 254.545)
+scale = Vector2(395.455, 509.091)
+texture = SubResource("CanvasTexture_1bvp3")
+
+[node name="Node2D" type="Node2D" parent="CanvasLayer/SubViewportContainer"]
+clip_children = 1
+position = Vector2(0, 1.90735e-06)
+
+[node name="event" parent="CanvasLayer/SubViewportContainer/Node2D" instance=ExtResource("3_h2yge")]
+visible = false
+clip_children = 1
+position = Vector2(0, -9.53674e-07)
+
+[node name="viev" type="Node2D" parent="."]
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+process_mode = 1
+
+[node name="Testtitle2" type="Sprite2D" parent="."]
+visible = false
+light_mask = 1014783
+visibility_layer = 1048575
+z_index = 4096
+position = Vector2(320, 577.889)
+rotation = 3.14159
+scale = Vector2(1.11111, 1.11111)
+texture = ExtResource("2_0xm2m")
+
+[node name="end" type="Node2D" parent="."]
+
+[connection signal="request_completed" from="HTTPRequest" to="." method="_on_http_request_request_completed"]

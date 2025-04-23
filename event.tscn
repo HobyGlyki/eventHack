@@ -1,0 +1,84 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3j0yc44qwioe"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_vxjf2"]
+size = Vector2(848.047, 1040.93)
+
+[sub_resource type="AnimatedTexture" id="AnimatedTexture_wi3ac"]
+
+[sub_resource type="FontVariation" id="FontVariation_ruury"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_mri8j"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[node name="event" type="Node2D"]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+modulate = Color(0.407843, 0.290196, 0.301961, 1)
+position = Vector2(0, -9.53674e-07)
+scale = Vector2(0.471704, 0.491864)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(423.966, 520.474)
+shape = SubResource("RectangleShape2D_vxjf2")
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+visible = false
+position = Vector2(137.351, 76.8516)
+scale = Vector2(274.275, 153.438)
+texture = SubResource("AnimatedTexture_wi3ac")
+
+[node name="Label" type="Label" parent="StaticBody2D"]
+offset_right = 796.0
+offset_bottom = 278.0
+scale = Vector2(1.05177, 1.05177)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("FontVariation_ruury")
+theme_override_font_sizes/font_size = 80
+theme_override_styles/normal = SubResource("StyleBoxFlat_mri8j")
+text = "фестеваль"
+horizontal_alignment = 1
+autowrap_mode = 2
+justification_flags = 35
+
+[node name="Label2" type="Label" parent="StaticBody2D"]
+offset_top = 472.0
+offset_right = 796.0
+offset_bottom = 890.0
+scale = Vector2(1.05177, 1.05177)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("FontVariation_ruury")
+theme_override_font_sizes/font_size = 51
+theme_override_styles/normal = SubResource("StyleBoxFlat_mri8j")
+text = "Всероссийский фестиваль студенческого творчества"
+horizontal_alignment = 1
+autowrap_mode = 2
+justification_flags = 35
+
+[node name="Label3" type="Label" parent="StaticBody2D"]
+offset_left = 6.10352e-05
+offset_top = 910.821
+offset_right = 274.0
+offset_bottom = 972.821
+scale = Vector2(1.05177, 1.05177)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("FontVariation_ruury")
+theme_override_font_sizes/font_size = 41
+theme_override_styles/normal = SubResource("StyleBoxFlat_mri8j")
+text = "2025-05-12"
+horizontal_alignment = 1
+autowrap_mode = 2
+justification_flags = 35
+
+[node name="Label4" type="Label" parent="StaticBody2D"]
+offset_top = 976.0
+offset_right = 774.0
+offset_bottom = 1033.0
+scale = Vector2(1.05177, 1.05177)
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("FontVariation_ruury")
+theme_override_font_sizes/font_size = 31
+theme_override_styles/normal = SubResource("StyleBoxFlat_mri8j")
+text = "Компьютерные классы КГУ"
+vertical_alignment = 2
+autowrap_mode = 2
+justification_flags = 35
